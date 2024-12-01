@@ -41,8 +41,9 @@ h3 {
 
 #days-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .day-container {
@@ -52,6 +53,7 @@ h3 {
     margin: 1rem;
     border-radius: 10px;
     width: 80%;
+    max-width: 800px;
     text-align: center;
     display: flex;
     align-items: center;
