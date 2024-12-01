@@ -1,0 +1,90 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("/wallhaven-3zr2j3.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 3em;
+    color: #e63946;
+    margin-bottom: 0.5em;
+}
+
+a {
+    font-size: 1.2em;
+    color: #2a9d8f;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 3rem;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h3 {
+    font-size: 2em;
+    color: #4e4e4e;
+    margin-bottom: 1em;
+}
+
+#days-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.day-container {
+    background-color: #ffffffbe;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 10px;
+    width: 80%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.answer-text {
+    font-size: 1.5rem;
+    margin-top: 1em;
+    color: #333;
+    font-weight: bold;
+}
+
+.answer {
+    font-weight: bold;
+    color: #0077b6;
+    font-size: 1.8rem;
+}
+.day-title {
+    margin: 0;
+    text-align: left;
+}
+
+.day-box {
+    background-color: #ffcc00;
+    border: 2px solid #ff5733;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    color: #cb0000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 0;
+    padding: 5px 10px;
+}
