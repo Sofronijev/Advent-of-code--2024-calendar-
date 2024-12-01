@@ -14,7 +14,6 @@ async function calculateDifference() {
   }, 0);
 
   appendAnswerToDay(1, totalDistance)
-  // document.getElementById("day1").textContent = totalDistance;
 }
 
 calculateDifference();
