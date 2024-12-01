@@ -31,7 +31,6 @@ async function getLocationIDLists() {
 
 function appendAnswerToDay(day, answer) {
   const dayContainer = document.querySelector(`.day-container.day${day} .answers`);
-  console.log(dayContainer);
   if (dayContainer) {
     const numberOfChildren = dayContainer.children.length;
 
