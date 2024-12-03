@@ -23,7 +23,7 @@ const processList = (text) => {
 };
 
 async function getLocationIDLists() {
-  const text = await fetchTextFile("./day01/input.txt");
+  const text = await fetchTextFile("./inputs/day1.txt");
   if (text) {
     return processList(text);
   }

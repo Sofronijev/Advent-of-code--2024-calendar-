@@ -1,5 +1,5 @@
 async function getReports() {
-  const text = await fetchTextFile("./day02/input.txt");
+  const text = await fetchTextFile("./inputs/day2.txt");
   if (text) {
     return text.split("\n").map((row) => row.split(" ").map(Number));
   }
