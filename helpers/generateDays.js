@@ -1,5 +1,5 @@
 (function () {
-  const n = 31;
+  const n = 25;
   const container = document.getElementById("days-container");
 
   let htmlContent = "";
