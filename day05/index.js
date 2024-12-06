@@ -34,12 +34,8 @@ async function checkProtocols() {
         const rightSide = array.slice(index + 1);
 
         return (
-          leftSide.every((num) =>
-            rulesBefore[updateNum] ? rulesBefore[updateNum].includes(num) : false
-          ) &&
-          rightSide.every((num) =>
-            rulesAfter[updateNum] ? rulesAfter[updateNum].includes(num) : false
-          )
+          leftSide.every((n) => rulesBefore[updateNum]?.includes(n)) &&
+          rightSide.every((n) => rulesAfter[updateNum]?.includes(n))
         );
       });
       if (isValid) {
