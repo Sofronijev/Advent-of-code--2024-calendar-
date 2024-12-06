@@ -39,10 +39,10 @@ async function calculateRoute() {
   let current = start;
 
   while (!foundExit) {
-    const [x, y] = current;
-    const [xPath, yPath] = routePlan[pathIndex];
-    const [finalX, finalY] = [+x + xPath, +y + yPath];
-    const finalLocation = map[finalX]?.[finalY];
+    const [row, column] = current;
+    const [rowPath, columnPath] = routePlan[pathIndex];
+    const [finalRow, finalColumn] = [+row + rowPath, +column + columnPath];
+    const finalLocation = map[finalRow]?.[finalColumn];
 
     if (!finalLocation) {
       foundExit = true;
@@ -53,7 +53,7 @@ async function calculateRoute() {
       pathIndex = (pathIndex + 1) % routePlan.length;
       continue;
     }
-    current = [finalX, finalY];
+    current = [finalRow, finalColumn];
 
     visited.add(JSON.stringify(current));
   }
