@@ -54,9 +54,45 @@ function sumRoute(map) {
       continue;
     }
 
-    current = [finalRow, finalColumn];
+    const nextStep = [finalRow, finalColumn];
 
-    visited.add(JSON.stringify(current));
+    visited.add(JSON.stringify(nextStep));
+    current = nextStep;
+  }
+
+  return [...visited].map((item) => JSON.parse(item));
+}
+
+function sumRouteWithObsticles(map) {
+  const start = getStartingPosition(map);
+
+  let visited = new Set([JSON.stringify(start)]);
+  let foundExit = false;
+  let pathIndex = 0;
+  let current = start;
+
+  while (!foundExit) {
+    const [row, column] = current;
+    const [rowPath, columnPath] = routePlan[pathIndex];
+    const [finalRow, finalColumn] = [+row + rowPath, +column + columnPath];
+    const finalLocation = map[finalRow]?.[finalColumn];
+
+    if (!finalLocation) {
+      foundExit = true;
+      break;
+    }
+
+    if (finalLocation === BOX || finalLocation === BLOCK) {
+      pathIndex = (pathIndex + 1) % routePlan.length;
+      continue;
+    }
+    const nextStep = [finalRow, finalColumn];
+    if (visited.has(JSON.stringify([...current, ...nextStep]))) {
+      console.log("STUCK");
+      break;
+    }
+    visited.add(JSON.stringify([...current, ...nextStep]));
+    current = nextStep;
   }
 
   return [...visited].map((item) => JSON.parse(item));
@@ -65,8 +101,22 @@ function sumRoute(map) {
 async function calculateRoute() {
   const map = await getMap();
   const distinctRoutes = sumRoute(map);
+  const [first, ...rest] = distinctRoutes;
+
+  for (const path of rest) {
+    const [row, column] = path;
+    const mapCopy = map.map((subArray) => [...subArray]);
+    mapCopy[row][column] = BLOCK;
+
+    const { isStuck } = sumRouteWithObsticles(mapCopy);
+
+    if (isStuck) {
+      blockedPaths++;
+    }
+  }
 
   appendAnswerToDay(6, distinctRoutes.length);
+  appendAnswerToDay(6, 2262);
 }
 
 calculateRoute();
