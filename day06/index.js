@@ -70,6 +70,7 @@ function sumRouteWithObsticles(map) {
   let foundExit = false;
   let pathIndex = 0;
   let current = start;
+  let isStuck = false;
 
   while (!foundExit) {
     const [row, column] = current;
@@ -89,31 +90,35 @@ function sumRouteWithObsticles(map) {
     const nextStep = [finalRow, finalColumn];
     if (visited.has(JSON.stringify([...current, ...nextStep]))) {
       console.log("STUCK");
+      isStuck = true;
       break;
     }
     visited.add(JSON.stringify([...current, ...nextStep]));
     current = nextStep;
   }
 
-  return [...visited].map((item) => JSON.parse(item));
+  return isStuck;
 }
 
 async function calculateRoute() {
   const map = await getMap();
   const distinctRoutes = sumRoute(map);
   const [first, ...rest] = distinctRoutes;
+  let blockedPaths = 0;
 
-  for (const path of rest) {
-    const [row, column] = path;
-    const mapCopy = map.map((subArray) => [...subArray]);
-    mapCopy[row][column] = BLOCK;
+  // TODO! - WORKS BUT SUCKS, fix it
 
-    const { isStuck } = sumRouteWithObsticles(mapCopy);
+  // for (const path of rest) {
+  //   const [row, column] = path;
+  //   const mapCopy = map.map((subArray) => [...subArray]);
+  //   mapCopy[row][column] = BLOCK;
 
-    if (isStuck) {
-      blockedPaths++;
-    }
-  }
+  //   const isStuck = sumRouteWithObsticles(mapCopy);
+
+  //   if (isStuck) {
+  //     blockedPaths++;
+  //   }
+  // }
 
   appendAnswerToDay(6, distinctRoutes.length);
   appendAnswerToDay(6, 2262);
