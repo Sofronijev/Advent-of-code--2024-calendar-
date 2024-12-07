@@ -8,6 +8,7 @@ async function getMap() {
 
 const GUARD = "^";
 const BOX = "#";
+const BLOCK = "X";
 
 const routePlan = [
   [-1, 0], //up
@@ -29,8 +30,7 @@ function containsArray(arrays, newArray) {
   return arrays.some((arr) => JSON.stringify(arr) === JSON.stringify(newArray));
 }
 
-async function calculateRoute() {
-  const map = await getMap();
+function sumRoute(map) {
   const start = getStartingPosition(map);
 
   let visited = new Set([JSON.stringify(start)]);
@@ -53,11 +53,20 @@ async function calculateRoute() {
       pathIndex = (pathIndex + 1) % routePlan.length;
       continue;
     }
+
     current = [finalRow, finalColumn];
 
     visited.add(JSON.stringify(current));
   }
-  appendAnswerToDay(6, visited.size);
+
+  return [...visited].map((item) => JSON.parse(item));
+}
+
+async function calculateRoute() {
+  const map = await getMap();
+  const distinctRoutes = sumRoute(map);
+
+  appendAnswerToDay(6, distinctRoutes.length);
 }
 
 calculateRoute();
