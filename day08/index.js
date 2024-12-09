@@ -22,12 +22,22 @@ async function getAntennasMap() {
 
 const EMPTY = ".";
 
-function getNodesLoc(antennaLoc, map) {
-  let nodeLocations = [];
+function calculateXLocation(x1, x2, distanceX) {
+  return x2 < x1 ? x1 + distanceX : x1 - distanceX;
+}
 
-  function recursion(i, antennaLoc, slate) {
+function calculateYLocation(y1, y2, distanceY) {
+  return y2 < y1 ? y1 + distanceY : y1 - distanceY;
+}
+
+function getNodesLoc(antennaLoc, map) {
+  let nodeLocations1 = [];
+  let nodeLocations2 = [];
+
+  function recursion(i, antennaLoc, slate1, slate2) {
     if (i >= antennaLoc.length - 1) {
-      nodeLocations.push(...slate.slice());
+      nodeLocations1.push(...slate1.slice());
+      nodeLocations2.push(...slate2.slice());
       return;
     }
 
@@ -41,29 +51,59 @@ function getNodesLoc(antennaLoc, map) {
       const distanceX = Math.abs(x1 - x2);
       const distanceY = Math.abs(y1 - y2);
 
-      const nodeX1Location = x2 < x1 ? x1 + distanceX : x1 - distanceX;
-      const nodeY1Location = y2 < y1 ? y1 + distanceY : y1 - distanceY;
+      let nodeX1Location = calculateXLocation(x1, x2, distanceX);
+      let nodeY1Location = calculateYLocation(y1, y2, distanceY);
 
-      const nodeX2Location = x2 > x1 ? x2 + distanceX : x2 - distanceX;
-      const nodeY2Location = y2 > y1 ? y2 + distanceY : y2 - distanceY;
+      let nodeX2Location = calculateXLocation(x2, x1, distanceX);
+      let nodeY2Location = calculateYLocation(y2, y1, distanceY);
 
+      // PART 1 --------------------------------------------------------
       const charAt1 = map[nodeX1Location]?.[nodeY1Location];
       const charAt2 = map[nodeX2Location]?.[nodeY2Location];
 
       if (charAt1) {
-        slate.push(`${nodeX1Location}-${nodeY1Location}`);
+        slate1.push(`${nodeX1Location}-${nodeY1Location}`);
       }
 
       if (charAt2) {
-        slate.push(`${nodeX2Location}-${nodeY2Location}`);
+        slate1.push(`${nodeX2Location}-${nodeY2Location}`);
       }
+      // PART 1 --------------------------------------------------------
+
+      // PART 2 --------------------------------------------------------
+      if (item1) {
+        slate2.push(item1);
+      }
+
+      if (item2) {
+        slate2.push(item2);
+      }
+
+      for (let iteration = 1; ; iteration++) {
+        nodeX1Location = calculateXLocation(x1, x2, distanceX * iteration);
+        nodeY1Location = calculateYLocation(y1, y2, distanceY * iteration);
+
+        if (!map[nodeX1Location]?.[nodeY1Location]) break; // Exit loop if condition is not met
+
+        slate2.push(`${nodeX1Location}-${nodeY1Location}`);
+      }
+
+      for (let iteration = 1; ; iteration++) {
+        nodeX2Location = calculateXLocation(x2, x1, distanceX * iteration);
+        nodeY2Location = calculateYLocation(y2, y1, distanceY * iteration);
+
+        if (!map[nodeX2Location]?.[nodeY2Location]) break; // Exit loop if condition is not met
+
+        slate2.push(`${nodeX2Location}-${nodeY2Location}`);
+      }
+      // PART 2 --------------------------------------------------------
     }
 
-    recursion(i + 1, antennaLoc, slate);
+    recursion(i + 1, antennaLoc, slate1, slate2);
   }
 
-  recursion(0, antennaLoc, []);
-  return nodeLocations;
+  recursion(0, antennaLoc, [], []);
+  return [nodeLocations1, nodeLocations2];
 }
 
 async function getAntinodes() {
@@ -71,14 +111,19 @@ async function getAntinodes() {
 
   const antennaValues = Object.keys(locations);
 
-  const allLocations = antennaValues.reduce((acc, value) => {
-    const antennaLoc = locations[value];
-    const nodeLocations = getNodesLoc(antennaLoc, map);
-    acc.push(...nodeLocations);
-    return acc;
-  }, []);
+  const { part1, part2 } = antennaValues.reduce(
+    (acc, value) => {
+      const antennaLoc = locations[value];
+      const [part1, part2] = getNodesLoc(antennaLoc, map);
+      acc.part1.push(...part1);
+      acc.part2.push(...part2);
+      return acc;
+    },
+    { part1: [], part2: [] }
+  );
 
-  appendAnswerToDay(8, new Set(allLocations).size);
+  appendAnswerToDay(8, new Set(part1).size);
+  appendAnswerToDay(8, new Set(part2).size);
 }
 
 getAntinodes();
