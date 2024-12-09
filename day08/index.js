@@ -83,7 +83,7 @@ function getNodesLoc(antennaLoc, map) {
         nodeX1Location = calculateXLocation(x1, x2, distanceX * iteration);
         nodeY1Location = calculateYLocation(y1, y2, distanceY * iteration);
 
-        if (!map[nodeX1Location]?.[nodeY1Location]) break; // Exit loop if condition is not met
+        if (!map[nodeX1Location]?.[nodeY1Location]) break;
 
         slate2.push(`${nodeX1Location}-${nodeY1Location}`);
       }
@@ -92,7 +92,7 @@ function getNodesLoc(antennaLoc, map) {
         nodeX2Location = calculateXLocation(x2, x1, distanceX * iteration);
         nodeY2Location = calculateYLocation(y2, y1, distanceY * iteration);
 
-        if (!map[nodeX2Location]?.[nodeY2Location]) break; // Exit loop if condition is not met
+        if (!map[nodeX2Location]?.[nodeY2Location]) break;
 
         slate2.push(`${nodeX2Location}-${nodeY2Location}`);
       }
