@@ -24,27 +24,62 @@ function defragment(map) {
   return fileSystem;
 }
 
+function defragmentWhole(map) {
+  const fileSystem = [...map];
+  for (let i = fileSystem.length - 1; i > 0; i--) {
+    if (fileSystem[i].length && !fileSystem[i].includes(EMPTY)) {
+      for (let j = 0; j < i; j++) {
+        if (fileSystem[j].length && fileSystem[j].includes(EMPTY)) {
+          const firstEmptyIndex = fileSystem[j].indexOf(EMPTY);
+          let numberPart = fileSystem[j].slice(0, firstEmptyIndex);
+          let emptyPart = fileSystem[j].slice(firstEmptyIndex);
+
+          if (emptyPart.length >= fileSystem[i].length) {
+            emptyPart = [...fileSystem[i], ...emptyPart.slice(fileSystem[i].length)];
+            fileSystem[i] = Array(fileSystem[i].length).fill(EMPTY);
+            fileSystem[j] = [...numberPart, ...emptyPart];
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return fileSystem.flat();
+}
+
 async function fragmentDisk() {
   const disk = await getDisk();
-  const files = [];
+  const diskMap = [];
+  const diskMapWhole = [];
 
   for (let i = 0; i < disk.length; i++) {
     const index = Math.floor(i / 2);
     for (let y = 0; y < disk[i]; y++) {
-      i % 2 === 0 ? files.push(index) : files.push(".");
+      i % 2 === 0 ? diskMap.push(index) : diskMap.push(".");
     }
   }
 
-  const sortedFile = defragment(files);
+  for (let i = 0; i < disk.length; i++) {
+    const index = Math.floor(i / 2);
+    i % 2 === 0
+      ? diskMapWhole.push(Array.from({ length: disk[i] }, () => Number(index)))
+      : diskMapWhole.push([...".".repeat(disk[i])].map((a) => a));
+  }
 
-  const sum = sortedFile.reduce((acc, value, index) => {
-    if (value !== EMPTY || !index) {
-      return acc + value * index;
-    }
-    return acc;
-  }, 0);
+  const sortedFile = defragment(diskMap);
+  const sortedWhole = defragmentWhole(diskMapWhole);
 
-  appendAnswerToDay(DAY, sum);
+  const sum = (disk) =>
+    disk.reduce((acc, value, index) => {
+      if (value !== "." || !index) {
+        return acc + +value * index;
+      }
+      return acc;
+    }, 0);
+
+  appendAnswerToDay(DAY, sum(sortedFile));
+  appendAnswerToDay(DAY, sum(sortedWhole));
 }
 
 fragmentDisk();
