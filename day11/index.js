@@ -7,12 +7,10 @@ async function getData() {
 }
 
 function transformStones(stones) {
-  const default_blinks = 25;
-  console.log(stones);
+  const default_blinks = 75;
   let stoneData = [];
 
   function recursion(data, blinks) {
-    console.log(data);
     if (blinks > default_blinks) {
       stoneData = data;
       return;
