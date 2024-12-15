@@ -6,45 +6,45 @@ async function getData() {
   }
 }
 
-function transformStones(stones) {
-  const default_blinks = 75;
-  let stoneData = [];
+function transformStones(stones, default_blinks) {
+  const cachedStones = new Map();
+  function count(stone, steps) {
+    const cacheKey = `${stone}-${steps}`;
 
-  function recursion(data, blinks) {
-    if (blinks > default_blinks) {
-      stoneData = data;
-      return;
+    if (cachedStones.has(cacheKey)) return cachedStones.get(cacheKey);
+
+    if (steps === 0) return 1;
+
+    if (stone === 0) {
+      const result = count(1, steps - 1);
+      cachedStones.set(cacheKey, result);
+      return result;
     }
+    const numToString = `${stone}`;
 
-    let newStones = [];
-
-    data.forEach((stone) => {
-      const numToString = `${stone}`;
-      if (stone === 0) {
-        newStones.push(1);
-      } else if (numToString.length % 2 === 0) {
-        const middle = numToString.length / 2;
-        const part1 = numToString.slice(0, middle);
-        const part2 = numToString.slice(middle);
-        newStones.push(parseInt(part1), parseInt(part2));
-      } else {
-        newStones.push(stone * 2024);
-      }
-    });
-
-    recursion(newStones, blinks + 1);
+    if (numToString.length % 2 === 0) {
+      const middle = numToString.length / 2;
+      const part1 = parseInt(numToString.slice(0, middle));
+      const part2 = parseInt(numToString.slice(middle));
+      const result = count(part1, steps - 1) + count(part2, steps - 1);
+      cachedStones.set(cacheKey, result);
+      return result;
+    }
+    result = count(stone * 2024, steps - 1);
+    cachedStones.set(cacheKey, result);
+    return result;
   }
 
-  recursion(stones, 1);
-
-  return stoneData;
+  return stones.map((stone) => count(stone, default_blinks)).reduce((acc, item) => acc + item, 0);
 }
 
-async function calculateStones(params) {
+async function calculateStones() {
   const data = await getData();
 
-  const stones = transformStones(data);
-  appendAnswerToDay(11, stones.length);
+  const stones = transformStones(data, 25);
+  appendAnswerToDay(11, stones);
+  const stones2 = transformStones(data, 75);
+  appendAnswerToDay(11, stones2);
 }
 
 calculateStones();
