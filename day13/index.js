@@ -45,6 +45,23 @@ function findPrizes(data) {
 
   return tokens;
 }
+// https://youtu.be/-5J-DAsWuJc?si=i8xRiCWKE_Xa-QGJ
+function findPrizes2(data) {
+  const { x, y } = data.price;
+  const { x: xA, y: yA } = data.A;
+  const { x: xB, y: yB } = data.B;
+  const priceX = x + 10000000000000;
+  const priceY = y + 10000000000000;
+  let tokens = 0;
+
+  const countA = (priceX * yB - priceY * xB) / (xA * yB - yA * xB);
+  const countB = (priceX - xA * countA) / xB;
+  if (Number.isInteger(countA) && Number.isInteger(countB)) {
+    tokens = countA * 3 + countB;
+  }
+
+  return tokens;
+}
 
 async function calculateTokens() {
   const data = await getData();
@@ -52,7 +69,12 @@ async function calculateTokens() {
     const price = findPrizes(item);
     return acc + +price;
   }, 0);
+  const result2 = data.reduce((acc, item) => {
+    const price = findPrizes2(item);
+    return acc + +price;
+  }, 0);
   appendAnswerToDay(13, result);
+  appendAnswerToDay(13, result2);
 }
 
 calculateTokens();
